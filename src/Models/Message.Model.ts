@@ -1,4 +1,4 @@
-export interface datosFormularioAsistencia{
+export interface EncuestasBaileys{
    Connection: ConnectionSession [];
 
 }
