@@ -1,15 +1,26 @@
-export interface EncuestasBaileys{
-   Connection: ConnectionSession [];
-
+export interface EncuestasBaileys {
+    code:    number;
+    message: string;
+    data:    DatosEncolamiento[];
+    
 }
 
-export interface ConnectionSession{
- numeroCel: number;
- Nombre: string;
+export interface DatosEncolamiento {
+    id:              string;
+    telefono:        string;
+    nombre:          string;
+    idPregunta:      number;
+    pregunta:        string;
+    idClasificacion: string;
 }
-export interface Message{
- fromme : string;
- participante: string;
- messageTimestamp: string;
- conversation: string;
+export interface ActualizarEncolamiento {
+    id: string;
+}
+export interface guardarMensaje {
+    nombre:     string;
+    telefono:   string;
+    fromme:     boolean;
+    mensaje:    string;
+    idPregunta: number;
+    idClasificacion: string;
 }

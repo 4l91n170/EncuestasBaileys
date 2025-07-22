@@ -48,6 +48,7 @@
     "libsignal": "github:WhiskeySockets/libsignal-node",
     "lodash": "^4.17.21",
     "music-metadata": "^7.12.3",
+    "node-cron": "^4.2.0",
     "pino": "^9.6",
     "protobufjs": "^7.2.4",
     "qrcode": "^1.5.4",

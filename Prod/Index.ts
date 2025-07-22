@@ -31,6 +31,8 @@ import qrcode from 'qrcode-terminal'
 const logger = P({ timestamp: () => `,"time":"${new Date().toJSON()}"` }, P.destination('./wa-logs.txt'))
 logger.level = 'trace'
 
+
+const _serviceIndex = new ServiceIndexService
 const doReplies = process.argv.includes('--do-reply')
 const usePairingCode = process.argv.includes('--use-pairing-code')
 const msgRetryCounterCache = new NodeCache()
@@ -92,8 +94,10 @@ const startSock = async () => {
 	  // Cuando la sincronización es exitosa
       if (connection === 'open') {
         console.log('✅ ¡Conexión establecida con WhatsApp!')
-        const _serviceIndex = new ServiceIndexService
-          setTimeout(() => _serviceIndex.getNumerosMock(sock), 5000)
+        
+        //Envio de los mensajes a los numeros mockeados
+       _serviceIndex.getEnvioAutomatico(sock)
+       console.log('✅ Mensajes automáticos enviados')
       }
 
       console.log('connection update', update)
@@ -114,11 +118,29 @@ const startSock = async () => {
           const isFromMe = msg.key.fromMe
           const mensajeTexto = msg.message?.conversation || msg.message?.extendedTextMessage?.text
 
-          if (!isFromMe && mensajeTexto) {
-            console.log(`Mensaje recibido de ${jid}: ${mensajeTexto}`)
-
-            await sock.readMessages([msg.key])
-            await sendMessageWTyping({ text: `Recibido tu mensaje: ${mensajeTexto}` }, jid)
+          const ahora = Date.now() / 1000
+          if (!isFromMe && mensajeTexto && msg.messageTimestamp && (ahora - Number(msg.messageTimestamp)) < 10) {
+          //  const mensajeRecibido = {
+          //   idMensaje: msg.key.id,
+          //   de: jid,
+          //   mensaje: mensajeTexto,
+          //   fecha: new Date().toISOString(),
+          //   fromme: msg.key.fromMe
+          // }
+            console.log('📩 Mensaje recibido')
+             _serviceIndex.postGuardadoConversacion({
+              nombre: '',
+              telefono: jid,
+              fromme:false,
+              mensaje: mensajeTexto,
+              idPregunta:  0, // Puedes ajustar esto según tu lógica
+              idClasificacion: '' // Puedes ajustar esto según tu lógica
+            })
+            console.log('Mensaje guardado en la base de datos')
+         
+        // 📤 Responder automáticamente
+        // await sock.sendMessage(jid, { text: `👋 Hola! Recibí tu mensaje: "${mensajeTexto}"` })
+         
           }
         }
       }
