@@ -135,9 +135,9 @@ const startSock = async () => {
               mensaje: mensajeTexto,
               idPregunta:  0, // Puedes ajustar esto según tu lógica
               idClasificacion: '' // Puedes ajustar esto según tu lógica
-            })
+            }).then(() => { _serviceIndex.getEncolamiento(sock)})
             console.log('Mensaje guardado en la base de datos')
-         
+           
         // 📤 Responder automáticamente
         // await sock.sendMessage(jid, { text: `👋 Hola! Recibí tu mensaje: "${mensajeTexto}"` })
          

@@ -6,7 +6,7 @@ import cron from 'node-cron'
 
 export class ServiceIndexService {
 
-public contactosMap: Map<string,DatosEncolamiento> = new Map();
+
 private url = environment.url
 // Programacion de los envios de mensajes
  public programarEnvioJueves(sock: any) {
@@ -19,20 +19,7 @@ private url = environment.url
   }
 
    public async getEnvioAutomatico(sock: any) {
-  //   try {
-  //     const response = await axios.get(`${this.url}/EnvioAutomatico/EnvioAutomatico`).then((response) => {
-  //       if (response.data === true || response.data === "true") {
-  //         this.getEncolamiento(sock)
-  //         console.log('✅ Ya entro mi perro')
-  //         }
-  //     })
-  //     console.log('✅ Mensaje automático obtenido')
-  //   } catch (error) {
-  //     console.error('❌ Error al obtener el mensaje automático')
-  //     throw error
-  //   }
-  // }
-   axios.get(`${this.url}/EnvioAutomatico/EnvioAutomatico`)
+  axios.get(`${this.url}/EnvioAutomatico/EnvioAutomatico`)
     .then((response) => {
         console.log('🔍 Response completo:', response.data);
       if (response.data.data === true ) {
