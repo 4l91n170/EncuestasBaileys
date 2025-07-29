@@ -11,8 +11,8 @@ private url = environment.url
 // Programacion de los envios de mensajes
  public programarEnvioJueves(sock: any) {
     // 0 9 * * 4 → Todos los jueves a las 09:00 AM
-    cron.schedule('0 9 * * 4', () => {
-      console.log('🗓️ Jueves 9:00 AM - Ejecutando envío de mensajes')
+    cron.schedule ('22 21 * * 1', () => {
+      
       this.getEnvioAutomatico(sock)
        // Aquí se llama el método que ya tienes
     })
@@ -21,18 +21,16 @@ private url = environment.url
    public async getEnvioAutomatico(sock: any) {
   axios.get(`${this.url}/EnvioAutomatico/EnvioAutomatico`)
     .then((response) => {
-        console.log('🔍 Response completo:', response.data);
+       
       if (response.data.data === true ) {
         // Si getEncolamiento es async, puedes encadenarlo también con .then()
         this.getEncolamiento(sock)
-          .then(() => {
-            console.log('✅ Ya entro mi perro');
-          })
+          .then(() => {})
           .catch((error) => {
             console.error('❌ Error en getEncolamiento:', error);
           });
       }
-      console.log('✅ Mensaje automático obtenido');
+      // console.log('✅ Mensaje automático obtenido');
     })
     .catch((error) => {
       console.error('❌ Error al obtener el mensaje automático:', error);
@@ -44,7 +42,7 @@ private url = environment.url
    const response = await axios.get(`${this.url}/Baileys/GetEncolamiento`)
    
    const datosEncolamiento: DatosEncolamiento[] = response.data.data
-   console.log('✅ Datos obtenidos de la API:', datosEncolamiento)
+   
    if (!Array.isArray(datosEncolamiento) || datosEncolamiento.length === 0) {
         console.warn('⚠️ No se encontraron contactos.')
         return
@@ -58,10 +56,10 @@ private url = environment.url
         for (const contacto of grupo) {
           const numero =  contacto.telefono
           const mensaje = `${contacto.pregunta} ${contacto.nombre}.`
-          console.log("mensaje", mensaje)
+          
           await sock.sendMessage( numero, { text: mensaje })
          
-          console.log(`✅ (Grupo ${indiceGrupo + 1}) Mensaje enviado a ${contacto.nombre}`)
+          
           listaIds.push({ id: contacto.id })
           await this.postGuardadoConversacion({
             nombre: contacto.nombre,
@@ -81,7 +79,7 @@ private url = environment.url
       // Recorrer lista en grupos de 2 con retardo entre grupos
       for (let i = 0; i < datosEncolamiento.length; i += tamañoGrupo) {
         const grupo = datosEncolamiento.slice(i, i + tamañoGrupo)
-        const delay = (i / tamañoGrupo) * 5000 // espera entre grupos
+        const delay =  (i / tamañoGrupo) * 5000 // espera entre grupos
 
         setTimeout(() => {
           enviarGrupo(grupo, i / tamañoGrupo)
@@ -99,7 +97,7 @@ public async postActualizarEncolamiento(listaIds: ActualizarEncolamiento[]) {
   try
   {
     const response = await axios.post(`${this.url}/Baileys/ActualizarEncolamiento`, listaIds)
-    console.log('✅ Encuesta actualizada:', listaIds)
+    
   }
   catch (error) {
     console.error('❌ Error al actualizar la encuesta')
@@ -109,9 +107,9 @@ public async postActualizarEncolamiento(listaIds: ActualizarEncolamiento[]) {
 // Post guardado conversacion
 public async postGuardadoConversacion(guardarMensaje: guardarMensaje) {
   try {
-    console.log('✌Guardando mensaje:', guardarMensaje)
+    // console.log('✌Guardando mensaje:', guardarMensaje)
     const response = await axios.post(`${this.url}/Baileys/GuardarMensaje`, guardarMensaje)
-    console.log('✅ Encuesta guardada:', guardarMensaje)
+    
   }
   catch (error) {
     console.error('❌ Error al guardar la encuesta:', error)

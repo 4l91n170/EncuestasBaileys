@@ -96,7 +96,7 @@ const startSock = async () => {
         console.log('✅ ¡Conexión establecida con WhatsApp!')
         
         //Envio de los mensajes a los numeros mockeados
-       _serviceIndex.getEnvioAutomatico(sock)
+       _serviceIndex.programarEnvioJueves(sock)
        console.log('✅ Mensajes automáticos enviados')
       }
 
@@ -110,7 +110,7 @@ const startSock = async () => {
 //Todo lo que tiene que ver con los eventos de los mensajes
     if (events['messages.upsert']) {
       const upsert = events['messages.upsert']
-      console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
+      // console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
 
       if (upsert.type === 'notify') {
         for (const msg of upsert.messages) {
@@ -120,14 +120,7 @@ const startSock = async () => {
 
           const ahora = Date.now() / 1000
           if (!isFromMe && mensajeTexto && msg.messageTimestamp && (ahora - Number(msg.messageTimestamp)) < 10) {
-          //  const mensajeRecibido = {
-          //   idMensaje: msg.key.id,
-          //   de: jid,
-          //   mensaje: mensajeTexto,
-          //   fecha: new Date().toISOString(),
-          //   fromme: msg.key.fromMe
-          // }
-            console.log('📩 Mensaje recibido')
+              // console.log('📩 Mensaje recibido')
              _serviceIndex.postGuardadoConversacion({
               nombre: '',
               telefono: jid,
@@ -136,17 +129,15 @@ const startSock = async () => {
               idPregunta:  0, // Puedes ajustar esto según tu lógica
               idClasificacion: '' // Puedes ajustar esto según tu lógica
             }).then(() => { _serviceIndex.getEncolamiento(sock)})
-            console.log('Mensaje guardado en la base de datos')
+            // console.log('Mensaje guardado en la base de datos')
            
-        // 📤 Responder automáticamente
-        // await sock.sendMessage(jid, { text: `👋 Hola! Recibí tu mensaje: "${mensajeTexto}"` })
+       
          
           }
         }
       }
     }
 
-    // ... el resto de tus eventos permanece igual
   })
 
   return sock
