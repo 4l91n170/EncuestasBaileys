@@ -8,10 +8,15 @@ export class ServiceIndexService {
 
 
 private url = environment.url
+private dia = environment.dia
+private hora = environment.hora
+private minuto = environment.minuto
+private numGrupo = environment.numGrupo
+private tiempoEnvio = environment.tiempoEnvio
 // Programacion de los envios de mensajes
  public programarEnvioJueves(sock: any) {
-    // 0 9 * * 4 → Todos los jueves a las 09:00 AM
-    cron.schedule ('22 21 * * 1', () => {
+    
+    cron.schedule (`${this.minuto} ${this.hora} * * ${this.dia}`, () => {
       
       this.getEnvioAutomatico(sock)
        // Aquí se llama el método que ya tienes
@@ -48,7 +53,7 @@ private url = environment.url
         return
       }
 
-      const tamañoGrupo = 5
+      const tamañoGrupo = this.numGrupo
 
       const listaIds: ActualizarEncolamiento[] = []
       // Función para enviar mensaje a un grupo
@@ -79,7 +84,7 @@ private url = environment.url
       // Recorrer lista en grupos de 2 con retardo entre grupos
       for (let i = 0; i < datosEncolamiento.length; i += tamañoGrupo) {
         const grupo = datosEncolamiento.slice(i, i + tamañoGrupo)
-        const delay =  (i / tamañoGrupo) * 5000 // espera entre grupos
+        const delay =  (i / tamañoGrupo) * this.tiempoEnvio // espera entre grupos
 
         setTimeout(() => {
           enviarGrupo(grupo, i / tamañoGrupo)
